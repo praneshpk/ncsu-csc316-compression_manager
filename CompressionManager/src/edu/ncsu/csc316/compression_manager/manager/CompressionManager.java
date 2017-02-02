@@ -21,15 +21,14 @@ public class CompressionManager {
 	    {
 	    	if( in.hasNextLine() ){
 	    		String line = in.nextLine();
-	    		in.close();
 	    		
 	    		if( line.length() > 1 &&
 	    				line.substring(0, 2).equals("0 ") ) {
-	    			decompress( filename );
+	    			//decompress( filename );
 	    			res = "DECOMPRESS";
 	    		}
 	    		else {
-	    			compress( filename );
+	    			//compress( filename );
 	    			res = "COMPRESS";
 	    		}
 	    	}
@@ -41,10 +40,21 @@ public class CompressionManager {
 		}
 	    return res;
 	}
-	public void compress( String filename ) {
-		
+	
+	public void compress( String filename ) throws FileNotFoundException {
+		try( Scanner in = new Scanner( new FileInputStream( filename ), "UTF8") )
+		{
+			while( in.hasNextLine() ) {
+				//...
+			}
+		}
 	}
-	public void decompress( String filename ) {
-		
+	public void decompress( String filename ) throws FileNotFoundException {
+		try( Scanner in = new Scanner( new FileInputStream( filename ), "UTF8") )
+		{
+			while( in.hasNextLine() ) {
+				//...
+			}
+		}
 	}
 }
