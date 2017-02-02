@@ -68,7 +68,6 @@ public class DoubleList<E> {
 	public void moveToFront( Iterator<E> it ) {
 		Node<E> e = ((DoubleListIterator) it).curr.prev;
 		
-		
 		e.getPrev().setNext( e.getNext() );
 		e.getNext().setPrev( e.getPrev() );
 		
