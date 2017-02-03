@@ -86,4 +86,12 @@ public class DoubleList<E> {
 		size ++;
 	}
 	
+	public String toString() {
+		DoubleListIterator e = new DoubleListIterator();
+		String res = "";
+		while( e.hasNext() )
+			res += e.next() + " ";
+		return res;
+	}
+	
 }
