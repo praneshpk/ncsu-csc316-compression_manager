@@ -1,8 +1,9 @@
+package edu.ncsu.csc316.compression_manager.test;
 
 
 import static org.junit.Assert.*;
 
-import java.io.IOException;
+import java.io.*;
 
 import org.junit.Test;
 
@@ -20,14 +21,24 @@ public class CompressionManagerTest {
 	
 	@Test
 	public void testNonexistentFile() {
+		// Allows System.out.print to go to output stream
+		ByteArrayOutputStream output = new ByteArrayOutputStream();
+		System.setOut(new PrintStream(output));
+		
 		CompressionManager c = new CompressionManager();
 		c.process("DeclarationOfIndependence");
+		assertEquals("Error: File not found!\n", output.toString());
 	}
 
 	@Test
 	public void testCorruptFile() {
+		// Allows System.out.print to go to output stream
+		ByteArrayOutputStream output = new ByteArrayOutputStream();
+		System.setOut(new PrintStream(output));
+		
 		CompressionManager c = new CompressionManager();
 		c.process("invalid-compressed.txt");
+		assertEquals("Error: Compressed file is corrupt!\n", output.toString());
 	}
 
 }

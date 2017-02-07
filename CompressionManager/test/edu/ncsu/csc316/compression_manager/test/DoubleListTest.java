@@ -1,3 +1,4 @@
+package edu.ncsu.csc316.compression_manager.test;
 
 
 import static org.junit.Assert.*;
@@ -16,18 +17,24 @@ public class DoubleListTest {
 	@Test
 	public void testDoubleList() {
 		wordlist = new DoubleList<>();
+		assertTrue( wordlist.size() == 0 );
 	}
 
 	@Test
 	public void testAdd() {
-		testDoubleList();
-		for(int i = 0; i < 5; i++ )
+		wordlist = new DoubleList<>();
+		for(int i = 0; i <= 5; i++ )
 			wordlist.add(i+"");
+		Iterator<String> it = wordlist.iterator();
+		for(int i = 5; i >= 0; i-- )
+			assertEquals( it.next(), i+"");
 	}
 	
 	@Test
 	public void testIterator() {
-		testAdd();
+		wordlist = new DoubleList<>();
+		for(int i = 0; i < 5; i++ )
+			wordlist.add(i+"");
 		Iterator<String> it = wordlist.iterator();
 		try {
 			it.remove();
@@ -46,9 +53,10 @@ public class DoubleListTest {
 
 	@Test
 	public void testSize() {
-		testAdd();
-		wordlist.size();
-		
+		wordlist = new DoubleList<>();
+		for(int i = 0; i < 5; i++ )
+			wordlist.add(i+"");
+		assertTrue( wordlist.size() == 5 );
 	}
 
 	@Test
