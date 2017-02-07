@@ -23,6 +23,7 @@ public class CompressionManager {
 	*/
 	public String process(String filename) {
 	    String res = new String();
+	    filename = filename.substring( 0, filename.length() - ".txt".length()  );
 		try( Scanner in = new Scanner( new FileInputStream( "input/"+filename+".txt" ), "UTF8") )
 	    {
 	    	if( in.hasNextLine() ){
@@ -62,18 +63,31 @@ public class CompressionManager {
 		wordlist.add( word );
 		return word;
 	}
+	private String lookUp( int index ) {
+		Iterator<String> it = wordlist.iterator();
+		for( int i = 1; i < index; i++ )
+			it.next();
+		String word = it.next();
+		wordlist.moveToFront(it);
+		return word;
+	}
 	
 	private void compress( String filename ) throws FileNotFoundException {
-		try( Scanner in = new Scanner( new FileInputStream( "input/"+filename+".txt" ), "UTF8") )
+		FileInputStream input = new FileInputStream( "input/"+filename+".txt" );
+		try( Scanner in = new Scanner( input , "UTF8") )
 		{
-			try( FileOutputStream fos = new FileOutputStream( "output/compressed/"+ filename + "-compressed.txt" );
-					Writer w = new OutputStreamWriter( fos, "UTF8" ))
+			String path = "output/compressed/";
+			File f = new File(path);
+			f.mkdirs();
+			try( FileOutputStream output = new FileOutputStream( path + filename + "-compressed.txt" );
+					Writer w = new OutputStreamWriter( output, "UTF8" ))
 			{
 				String line, word;
 				w.write( "0 " );
 				while( in.hasNextLine() ) {
 					line = in.nextLine();
 					word = "";
+					
 					for( int i = 0; i < line.length(); i++ ) {
 						if( Character.isLetter(line.charAt(i)) )
 							word += line.charAt(i);
@@ -83,9 +97,15 @@ public class CompressionManager {
 						}
 						else
 							w.write( line.charAt(i) );
-					}
+					} // for
+					
+					if( word != "" )
+						w.write( lookUp(word) );
 					w.write( "\n" );
-				}
+				} // while
+				w.flush();
+				w.write("0 Uncompressed: " + input.getChannel().size() + 
+						" bytes;  Compressed: " + ( output.getChannel().size() - 3) +" bytes");
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -95,33 +115,50 @@ public class CompressionManager {
 	private void decompress( String filename ) throws FileNotFoundException {
 		try( Scanner in = new Scanner( new FileInputStream( "input/"+filename+".txt" ), "UTF8") )
 		{
-			try( FileOutputStream fos = new FileOutputStream( "output/decompressed/"+ filename + "-decompressed.txt" );
+			String filePath = "output/decompressed/";
+			File f = new File(filePath);
+			f.mkdirs();
+			filename = filename.substring( 0, filename.length() - "-compressed".length() );
+			try( FileOutputStream fos = new FileOutputStream( "output/decompressed/"+ filename + ".txt", false );
 					Writer w = new OutputStreamWriter( fos, "UTF8" ))
 			{
-				String line, word;
-				Iterator<String> it;
-				int index;
 				while( in.hasNextLine() ) {
-					line = in.nextLine();
-					word = "";
-					for( int i = 2; i < line.length(); i++ ) {
+					String line;
+					String word = "";
+					int start = 0;
+					
+					if( ( line = in.nextLine() ).isEmpty() ) {
+						w.write("\n");
+						continue;
+					}
+					else if( line.substring(0,2).equals("0 ") ){
+						if( in.hasNextLine() )
+							start = 2;
+						else
+							break;
+					}
+					else
+						w.write("\n");
+					for( int i = start; i < line.length(); i++ ) {
+						int index = 0;
 						if( Character.isLetter(line.charAt(i)) )
 							word += line.charAt(i);
-						else if( Character.isDigit(line.charAt(i)) ){
-							index = Integer.parseInt(line.charAt(i)+"");
-							
-							if( index > wordlist.size() ||
-								index < 1 ) {
+						else if( Character.isDigit(line.charAt(i)) ) {
+							String temp = line.charAt(i) +"";
+							for( i = i+1; i < line.length(); i++ ) {
+								if( Character.isDigit(line.charAt(i)) )
+									temp += line.charAt(i);
+								else {
+									i--;
+									break;
+								}
+							}
+							index = Integer.parseInt(temp);
+							if( index > wordlist.size() ) {
 								System.out.println("Error: Compressed file is corrupt!");
 								System.exit(0);
 							}
-							
-							it = wordlist.iterator();
-							for( int j = 1; j < index; j++ )
-								it.next();
-							w.write( it.next() );
-							wordlist.moveToFront(it);
-							
+							w.write( lookUp(index));
 						}
 						else if( word != "" ) {
 							w.write( lookUp( word ) + line.charAt(i) );
@@ -130,7 +167,8 @@ public class CompressionManager {
 						else
 							w.write( line.charAt(i) );
 					}
-					w.write( "\n" );
+					if( word != "" )
+						w.write( lookUp( word ) );
 				}
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
