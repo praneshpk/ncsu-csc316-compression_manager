@@ -55,7 +55,7 @@ public class CompressionManagerTest {
 		
 		CompressionManager c = new CompressionManager();
 		c.process("input/invalid-compressed.txt");
-		assertEquals("Error: Compressed file is corrupt!\n", output.toString());
+		assertEquals("Error: Compressed file input/invalid-compressed.txt is corrupt!\n", output.toString());
 	}
 
 }
