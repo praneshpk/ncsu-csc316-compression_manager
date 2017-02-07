@@ -225,9 +225,11 @@ public class CompressionManager {
 							index = Integer.parseInt(temp);
 							
 							// Checks if index is in wordlist and write corresponding word
-							if( index > wordlist.size() ) {
+							try {
+								if( index > wordlist.size() )
+									throw new Exception();
+							} catch( Exception e ) {
 								System.out.println("Error: Compressed file is corrupt!");
-								System.exit(0);
 							}
 							w.write( lookUp(index));
 						}
@@ -247,8 +249,8 @@ public class CompressionManager {
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			}
-		}
+			} // try catch
+		} // try
 	}
 	
 }

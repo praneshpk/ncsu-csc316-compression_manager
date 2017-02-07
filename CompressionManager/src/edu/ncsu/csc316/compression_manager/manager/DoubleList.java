@@ -137,29 +137,11 @@ public class DoubleList<E> {
 	public DoubleListIterator iterator() { return new DoubleListIterator(); }
 	
 	/**
-	 * Determines if the list is empty
-	 * @return true if list is empty
-	 * 		   false if it is not
-	 */
-	public boolean isEmpty() { return size == 0 ;}
-	
-	/**
 	 * Gets the size of the list
 	 * @return size of the list
 	 */
 	public int size() { return size; }
 	
-	/**
-	 * Gets the first Node in the list
-	 * @return first Node of list
-	 */
-	public Node<E> getFirst() { return header.getNext(); }
-	
-	/**
-	 * Gets the last Node in the list
-	 * @return last Node of list
-	 */
-	public Node<E> getLast() { return trailer.getPrev(); }
 	
 	/**
 	 * Moves the current Node given by the Iterator object
@@ -189,18 +171,6 @@ public class DoubleList<E> {
 		header.getNext().setPrev( e );
 		header.setNext( e );
 		size ++;
-	}
-	
-	/** 
-	 * Lists all words in the list separated by spaces. Used for debugging.
-	 * @return words in list separated by spaces 
-	 */
-	public String toString() {
-		DoubleListIterator e = new DoubleListIterator();
-		String res = "";
-		while( e.hasNext() )
-			res += e.next() + " ";
-		return res;
 	}
 	
 }
