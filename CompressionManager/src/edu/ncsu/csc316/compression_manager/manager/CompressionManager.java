@@ -56,7 +56,7 @@ public class CompressionManager {
 	    		res = "EMPTY";
 	    	}
 	    } catch (IOException e) {
-			System.out.println("Error: File not found!");
+			System.out.println("Error: File " + filename + " not found!");
 		} catch (RuntimeException e ) {
 			System.out.println("Error: Compressed file is corrupt!");
 		}
