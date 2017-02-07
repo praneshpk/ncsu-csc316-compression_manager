@@ -34,16 +34,16 @@ public class CompressionManager {
 		
 		// Modifying filename to allow for renaming within method
 	    String res = new String();
-	    filename = filename.substring( "input/".length(), filename.length() - ".txt".length()  );
 	    
 	    // Reads in file and checks if file is to be compressed or decompressed
-		try( Scanner in = new Scanner( new FileInputStream( "input/" + filename + ".txt" ), "UTF8") )
+		try( Scanner in = new Scanner( new FileInputStream( filename ), "UTF8") )
 	    {
 	    	if( in.hasNextLine() ){
 	    		String line = in.nextLine();
 	    		in.close();
 	    		
 	    		if( line.length() > 1 && line.substring(0, 2).equals("0 ") ) {
+	    			
 	    			decompress( filename );
 	    			res = "DECOMPRESS";
 	    		}
@@ -56,7 +56,7 @@ public class CompressionManager {
 	    		res = "EMPTY";
 	    	}
 	    } catch (IOException e) {
-			System.out.println("Error: File " + filename + ".txt not found!");
+			System.out.println("Error: File " + filename + " not found!");
 		} catch (RuntimeException e ) {
 			System.out.println("Error: Compressed file is corrupt!");
 		}
@@ -119,7 +119,7 @@ public class CompressionManager {
 	 */
 	private void compress( String filename ) throws IOException {
 		// Creates new input file stream
-		FileInputStream input = new FileInputStream( "input/" + filename + ".txt" );
+		FileInputStream input = new FileInputStream( filename );
 		try( Scanner in = new Scanner( input , "UTF8") )
 		{
 			// Creates output directory if not already made
@@ -127,8 +127,12 @@ public class CompressionManager {
 			File f = new File(path);
 			f.mkdirs();
 			
+		    File f2 = new File( filename );
+		    String file = f2.getName();
+		    file = file.substring(0, file.length() - ".txt".length() );
+			
 			// Creates new output file stream
-			try( FileOutputStream output = new FileOutputStream( path + filename + "-compressed.txt" );
+			try( FileOutputStream output = new FileOutputStream( path + file + "-compressed.txt" );
 					Writer w = new OutputStreamWriter( output, "UTF8" ))
 			{
 				// Initializes compressed file
@@ -172,16 +176,18 @@ public class CompressionManager {
 	 * @throws IOException if file is not found
 	 */
 	private void decompress( String filename ) throws IOException {
-		try( Scanner in = new Scanner( new FileInputStream( "input/" + filename + ".txt" ), "UTF8") )
+		try( Scanner in = new Scanner( new FileInputStream( filename ), "UTF8") )
 		{
 			// Creates output directory if not already made
-			String filePath = "output/decompressed/";
-			File f = new File(filePath);
+			String path = "output/decompressed/";
+			File f = new File(path);
 			f.mkdirs();
 			
 			// Rename file and create new output file stream
-			filename = filename.substring( 0, filename.length() - "-compressed".length() );
-			try( FileOutputStream fos = new FileOutputStream( "output/decompressed/" + filename + ".txt", false );
+			File f2 = new File( filename );
+			String file = f2.getName();
+			file = file.substring(0, file.length() - ".txt".length() );
+			try( FileOutputStream fos = new FileOutputStream( path + file + ".txt", false );
 					Writer w = new OutputStreamWriter( fos, "UTF8" ))
 			{
 				// Iterates through the input file

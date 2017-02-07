@@ -40,7 +40,7 @@ public class CompressionManagerTest {
 		
 		CompressionManager c = new CompressionManager();
 		c.process("input/random.txt");
-		assertEquals("Error: File random.txt not found!\n", output.toString());
+		assertEquals("Error: File input/random.txt not found!\n", output.toString());
 	}
 	
 	/**
