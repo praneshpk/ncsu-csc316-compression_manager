@@ -55,7 +55,7 @@ public class CompressionManager {
 	    	else {
 	    		res = "EMPTY";
 	    	}
-	    } catch (FileNotFoundException e) {
+	    } catch (IOException e) {
 			System.out.println("Error: File not found!");
 		}
 	    return res;
@@ -113,9 +113,9 @@ public class CompressionManager {
 	/**
 	 * Compresses the given file to output/compressed/
 	 * @param filename the given filename w/o file ext
-	 * @throws FileNotFoundException if given file is not found
+	 * @throws IOException if file is not found
 	 */
-	private void compress( String filename ) throws FileNotFoundException {
+	private void compress( String filename ) throws IOException {
 		// Creates new input file stream
 		FileInputStream input = new FileInputStream( "input/"+filename+".txt" );
 		try( Scanner in = new Scanner( input , "UTF8") )
@@ -160,9 +160,6 @@ public class CompressionManager {
 				w.flush();
 				w.write("0 Uncompressed: " + input.getChannel().size() + 
 						" bytes;  Compressed: " + ( output.getChannel().size() - 3) + " bytes");
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
 			}
 		}
 	}
@@ -170,9 +167,9 @@ public class CompressionManager {
 	/**
 	 * Decompresses the given file to output/decompressed/
 	 * @param filename the given filename w/o file ext.
-	 * @throws FileNotFoundException if file is not found
+	 * @throws IOException if file is not found
 	 */
-	private void decompress( String filename ) throws FileNotFoundException {
+	private void decompress( String filename ) throws IOException {
 		try( Scanner in = new Scanner( new FileInputStream( "input/"+filename+".txt" ), "UTF8") )
 		{
 			// Creates output directory if not already made
@@ -185,24 +182,20 @@ public class CompressionManager {
 			try( FileOutputStream fos = new FileOutputStream( "output/decompressed/"+ filename + ".txt", false );
 					Writer w = new OutputStreamWriter( fos, "UTF8" ))
 			{
+				int start = 2;
 				// Iterates through the input file
 				while( in.hasNextLine() ) {
 					String line;
 					String word = "";
-					int start = 0;
 					
 					// Determines which lines/characters to skip
 					if( ( line = in.nextLine() ).isEmpty() ) {
 						w.write("\n");
 						continue;
 					}
-					else if( line.substring(0,2).equals("0 ") ){
-						if( in.hasNextLine() )
-							start = 2;
-						else
-							break;
-					}
-					else
+					else if( start == 0 && line.charAt(0) == '0')
+						break;
+					else if( start == 0 )
 						w.write("\n");
 					
 					// Iterates through a line, writing to the file / storing in word buffer
@@ -227,15 +220,17 @@ public class CompressionManager {
 							// Checks if index is in wordlist and write corresponding word
 							try {
 								if( index > wordlist.size() )
-									throw new Exception();
-							} catch( Exception e ) {
+									throw new RuntimeException();
+							} catch ( RuntimeException e ) {
 								System.out.println("Error: Compressed file is corrupt!");
+								return;
 							}
 							w.write( lookUp(index));
 						}
 						else if( word != "" ) {
 							// Writes word left in buffer
-							w.write( lookUp( word ) + line.charAt(i) );
+							lookUp( word );
+							w.write( word + line.charAt(i) );
 							word = "";
 						}
 						else
@@ -243,13 +238,14 @@ public class CompressionManager {
 					} // for
 					
 					// Writes word left in buffer
-					if( word != "" )
-						w.write( lookUp( word ) );
-				}
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} // try catch
+					if( word != "" ) {
+						lookUp( word );
+						w.write( word );
+						word = "";
+					}
+					start = 0;
+				} // while
+			} // try
 		} // try
 	}
 	

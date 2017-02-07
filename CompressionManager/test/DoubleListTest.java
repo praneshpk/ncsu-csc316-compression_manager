@@ -3,6 +3,7 @@
 import static org.junit.Assert.*;
 
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 import org.junit.Test;
 
@@ -30,9 +31,17 @@ public class DoubleListTest {
 		Iterator<String> it = wordlist.iterator();
 		try {
 			it.remove();
-		} catch (UnsupportedOperationException e){}
-		for(int i = 0; i < 6; i++ )
-			it.next();
+			fail("UnsupportedOperationException was not thrown");
+		} catch(UnsupportedOperationException e){
+			// Supposed to throw exception
+		}
+		try {
+			for(int i = 0; i < 8; i++ )
+				it.next();
+			fail("NoSuchElementException was not thrown");
+		} catch( NoSuchElementException e ){
+			// Supposed to throw exception
+		}
 	}
 
 	@Test
