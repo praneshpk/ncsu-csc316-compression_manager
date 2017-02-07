@@ -1,8 +1,10 @@
+
+
 import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-public class TestCompressionManager {
+public class CompressionManagerUITest {
 
 	@Test
 	public void test() {
