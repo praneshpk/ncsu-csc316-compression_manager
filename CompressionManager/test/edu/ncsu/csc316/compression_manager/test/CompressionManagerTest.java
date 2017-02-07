@@ -24,9 +24,9 @@ public class CompressionManagerTest {
 	@Test
 	public void testCompressionManager() {
 		CompressionManager c = new CompressionManager();
-		assertEquals(c.process("DeclarationOfIndependence.txt"), "COMPRESS");
-		assertEquals(c.process("DeclarationOfIndependence-compressed.txt"), "DECOMPRESS");
-		assertEquals(c.process("empty.txt"), "EMPTY");
+		assertEquals(c.process("DeclarationOfIndependence"), "COMPRESS");
+		assertEquals(c.process("DeclarationOfIndependence-compressed"), "DECOMPRESS");
+		assertEquals(c.process("empty"), "EMPTY");
 	}
 	
 	/**
@@ -39,7 +39,7 @@ public class CompressionManagerTest {
 		System.setOut(new PrintStream(output));
 		
 		CompressionManager c = new CompressionManager();
-		c.process("DeclarationOfIndependence");
+		c.process("Random");
 		assertEquals("Error: File not found!\n", output.toString());
 	}
 	
@@ -54,7 +54,7 @@ public class CompressionManagerTest {
 		System.setOut(new PrintStream(output));
 		
 		CompressionManager c = new CompressionManager();
-		c.process("invalid-compressed.txt");
+		c.process("invalid-compressed");
 		assertEquals("Error: Compressed file is corrupt!\n", output.toString());
 	}
 

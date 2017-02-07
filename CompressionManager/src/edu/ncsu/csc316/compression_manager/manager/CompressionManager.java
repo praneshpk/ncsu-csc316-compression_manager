@@ -34,7 +34,7 @@ public class CompressionManager {
 		
 		// Modifying filename to allow for renaming within method
 	    String res = new String();
-	    filename = filename.substring( 0, filename.length() - ".txt".length()  );
+	    //filename = filename.substring( 0, filename.length() - ".txt".length()  );
 	    
 	    // Reads in file and checks if file is to be compressed or decompressed
 		try( Scanner in = new Scanner( new FileInputStream( "input/" + filename + ".txt" ), "UTF8") )
