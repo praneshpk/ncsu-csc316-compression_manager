@@ -18,13 +18,13 @@ public class CompressionManagerTest {
 		assertEquals(c.process("empty.txt"), "EMPTY");
 	}
 	
-	@Test(expected=IOException.class)
+	@Test
 	public void testNonexistentFile() {
 		CompressionManager c = new CompressionManager();
 		c.process("DeclarationOfIndependence");
 	}
 
-	@Test(expected=RuntimeException.class)
+	@Test
 	public void testCorruptFile() {
 		CompressionManager c = new CompressionManager();
 		c.process("invalid-compressed.txt");

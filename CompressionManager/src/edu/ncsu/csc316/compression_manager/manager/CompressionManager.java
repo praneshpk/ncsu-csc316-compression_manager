@@ -57,6 +57,8 @@ public class CompressionManager {
 	    	}
 	    } catch (IOException e) {
 			System.out.println("Error: File not found!");
+		} catch (RuntimeException e ) {
+			System.out.println("Error: Compressed file is corrupt!");
 		}
 	    return res;
 	}
@@ -218,13 +220,8 @@ public class CompressionManager {
 							index = Integer.parseInt(temp);
 							
 							// Checks if index is in wordlist and write corresponding word
-							try {
-								if( index > wordlist.size() )
-									throw new RuntimeException();
-							} catch ( RuntimeException e ) {
-								System.out.println("Error: Compressed file is corrupt!");
-								return;
-							}
+							if( index > wordlist.size() )
+								throw new RuntimeException();
 							w.write( lookUp(index));
 						}
 						else if( word != "" ) {
@@ -245,8 +242,8 @@ public class CompressionManager {
 					}
 					start = 0;
 				} // while
-			} // try
-		} // try
+			} // try-with-resources
+		} // try-with-resources
 	}
 	
 }
