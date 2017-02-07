@@ -9,8 +9,18 @@ import org.junit.Test;
 
 import edu.ncsu.csc316.compression_manager.manager.CompressionManager;
 
+/**
+ * The CompressionManagerTest class maintains all the functions
+ * for testing the CompressionManager class
+ * @author Pranesh Kamalakanthan
+ *
+ */
 public class CompressionManagerTest {
 
+	/**
+	 * Tests the compression / decompression operations of CompressionManager
+	 * testing all possible return values
+	 */
 	@Test
 	public void testCompressionManager() {
 		CompressionManager c = new CompressionManager();
@@ -19,6 +29,9 @@ public class CompressionManagerTest {
 		assertEquals(c.process("empty.txt"), "EMPTY");
 	}
 	
+	/**
+	 * Tests the try-catch statement for FileNotFoundException
+	 */
 	@Test
 	public void testNonexistentFile() {
 		// Allows System.out.print to go to output stream
@@ -29,7 +42,11 @@ public class CompressionManagerTest {
 		c.process("DeclarationOfIndependence");
 		assertEquals("Error: File not found!\n", output.toString());
 	}
-
+	
+	/**
+	 * Tests the try-catch statement for RuntimeException, resulting
+	 * from an incorrectly compressed file
+	 */
 	@Test
 	public void testCorruptFile() {
 		// Allows System.out.print to go to output stream

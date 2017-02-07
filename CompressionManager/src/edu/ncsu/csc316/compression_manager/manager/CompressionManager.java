@@ -37,7 +37,7 @@ public class CompressionManager {
 	    filename = filename.substring( 0, filename.length() - ".txt".length()  );
 	    
 	    // Reads in file and checks if file is to be compressed or decompressed
-		try( Scanner in = new Scanner( new FileInputStream( "input/"+filename+".txt" ), "UTF8") )
+		try( Scanner in = new Scanner( new FileInputStream( "input/" + filename + ".txt" ), "UTF8") )
 	    {
 	    	if( in.hasNextLine() ){
 	    		String line = in.nextLine();
@@ -84,7 +84,7 @@ public class CompressionManager {
 				wordlist.moveToFront(it);
 				return index + "";
 			}
-			index ++;
+			index++;
 		}
 		wordlist.add( word );
 		
@@ -119,7 +119,7 @@ public class CompressionManager {
 	 */
 	private void compress( String filename ) throws IOException {
 		// Creates new input file stream
-		FileInputStream input = new FileInputStream( "input/"+filename+".txt" );
+		FileInputStream input = new FileInputStream( "input/" + filename + ".txt" );
 		try( Scanner in = new Scanner( input , "UTF8") )
 		{
 			// Creates output directory if not already made
@@ -144,7 +144,7 @@ public class CompressionManager {
 					for( int i = 0; i < line.length(); i++ ) {
 						if( Character.isLetter(line.charAt(i)) )
 							word += line.charAt(i);
-						else if( word != "" ) {
+						else if( ! word.equals("") ) {
 							w.write( lookUp( word ) + line.charAt(i) );
 							word = "";
 						}
@@ -153,7 +153,7 @@ public class CompressionManager {
 					} // for
 					
 					// Writes what's left in the word buffer
-					if( word != "" )
+					if( ! word.equals("") )
 						w.write( lookUp(word) );
 					w.write( "\n" );
 				} // while
@@ -172,7 +172,7 @@ public class CompressionManager {
 	 * @throws IOException if file is not found
 	 */
 	private void decompress( String filename ) throws IOException {
-		try( Scanner in = new Scanner( new FileInputStream( "input/"+filename+".txt" ), "UTF8") )
+		try( Scanner in = new Scanner( new FileInputStream( "input/" + filename + ".txt" ), "UTF8") )
 		{
 			// Creates output directory if not already made
 			String filePath = "output/decompressed/";
@@ -181,17 +181,17 @@ public class CompressionManager {
 			
 			// Rename file and create new output file stream
 			filename = filename.substring( 0, filename.length() - "-compressed".length() );
-			try( FileOutputStream fos = new FileOutputStream( "output/decompressed/"+ filename + ".txt", false );
+			try( FileOutputStream fos = new FileOutputStream( "output/decompressed/" + filename + ".txt", false );
 					Writer w = new OutputStreamWriter( fos, "UTF8" ))
 			{
 				int start = 2;
 				// Iterates through the input file
 				while( in.hasNextLine() ) {
-					String line;
+					String line = in.nextLine();
 					String word = "";
 					
 					// Determines which lines/characters to skip
-					if( ( line = in.nextLine() ).isEmpty() ) {
+					if( line.isEmpty() ) {
 						w.write("\n");
 						continue;
 					}
@@ -208,7 +208,7 @@ public class CompressionManager {
 							word += line.charAt(i);
 						else if( Character.isDigit(line.charAt(i)) ) {
 							// Adds support for multiple digit numbers
-							String temp = line.charAt(i) +"";
+							String temp = line.charAt(i) + "";
 							for( i = i + 1; i < line.length(); i++ ) {
 								if( Character.isDigit(line.charAt(i)) )
 									temp += line.charAt(i);
@@ -224,7 +224,7 @@ public class CompressionManager {
 								throw new RuntimeException();
 							w.write( lookUp(index));
 						}
-						else if( word != "" ) {
+						else if( ! word.equals("") ) {
 							// Writes word left in buffer
 							lookUp( word );
 							w.write( word + line.charAt(i) );
@@ -235,7 +235,7 @@ public class CompressionManager {
 					} // for
 					
 					// Writes word left in buffer
-					if( word != "" ) {
+					if( ! word.equals("") ) {
 						lookUp( word );
 						w.write( word );
 						word = "";

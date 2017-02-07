@@ -170,7 +170,7 @@ public class DoubleList<E> {
 		Node<E> e = new Node<>(d, header, header.getNext());
 		header.getNext().setPrev( e );
 		header.setNext( e );
-		size ++;
+		size++;
 	}
 	
 }

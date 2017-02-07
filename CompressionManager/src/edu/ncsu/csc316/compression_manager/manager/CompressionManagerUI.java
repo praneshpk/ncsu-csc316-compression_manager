@@ -24,11 +24,11 @@ public class CompressionManagerUI {
 		in.close();
 		
 		// Prints message according to which method was called 
-		if( res == "COMPRESS")
+		if( res.equals("COMPRESS") )
 			System.out.print("File was successfully compressed");
-		else if( res == "DECOMPRESS")
+		else if( res.equals("DECOMPRESS") )
 			System.out.print("File was successfully decompressed");
-		else if( res == "EMPTY" )
+		else if( res.equals("EMPTY") )
 			System.out.print("Error: The input file is empty");
 		
 	}
