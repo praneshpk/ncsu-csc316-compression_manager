@@ -144,7 +144,7 @@ public class CompressionManager {
 					for( int i = 0; i < line.length(); i++ ) {
 						if( Character.isLetter(line.charAt(i)) )
 							word += line.charAt(i);
-						else if( ! word.equals("") ) {
+						else if( !word.equals("") ) {
 							w.write( lookUp( word ) + line.charAt(i) );
 							word = "";
 						}
@@ -153,7 +153,7 @@ public class CompressionManager {
 					} // for
 					
 					// Writes what's left in the word buffer
-					if( ! word.equals("") )
+					if( !word.equals("") )
 						w.write( lookUp(word) );
 					w.write( "\n" );
 				} // while
@@ -184,20 +184,24 @@ public class CompressionManager {
 			try( FileOutputStream fos = new FileOutputStream( "output/decompressed/" + filename + ".txt", false );
 					Writer w = new OutputStreamWriter( fos, "UTF8" ))
 			{
-				int start = 2;
 				// Iterates through the input file
 				while( in.hasNextLine() ) {
 					String line = in.nextLine();
 					String word = "";
+					int start = 0;
 					
 					// Determines which lines/characters to skip
 					if( line.isEmpty() ) {
 						w.write("\n");
 						continue;
 					}
-					else if( start == 0 && line.charAt(0) == '0')
-						break;
-					else if( start == 0 )
+					else if( line.substring(0,2).equals("0 ") ){
+						if( in.hasNextLine() )
+							start = 2;
+						else
+							break;
+					}
+					else
 						w.write("\n");
 					
 					// Iterates through a line, writing to the file / storing in word buffer
@@ -224,7 +228,7 @@ public class CompressionManager {
 								throw new RuntimeException();
 							w.write( lookUp(index));
 						}
-						else if( ! word.equals("") ) {
+						else if( !word.equals("") ) {
 							// Writes word left in buffer
 							lookUp( word );
 							w.write( word + line.charAt(i) );
@@ -235,12 +239,11 @@ public class CompressionManager {
 					} // for
 					
 					// Writes word left in buffer
-					if( ! word.equals("") ) {
+					if( !word.equals("") ) {
 						lookUp( word );
 						w.write( word );
 						word = "";
 					}
-					start = 0;
 				} // while
 			} // try-with-resources
 		} // try-with-resources

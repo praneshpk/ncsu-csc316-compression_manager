@@ -36,7 +36,7 @@ public class DoubleListTest {
 			wordlist.add(i + "");
 		Iterator<String> it = wordlist.iterator();
 		for(int i = 5; i >= 0; i-- )
-			assertEquals( it.next(), i+"");
+			assertEquals( it.next(), i + "");
 	}
 	
 	/**
