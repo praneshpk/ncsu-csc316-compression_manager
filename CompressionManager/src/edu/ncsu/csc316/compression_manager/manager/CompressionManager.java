@@ -195,7 +195,7 @@ public class CompressionManager {
 						w.write("\n");
 						continue;
 					}
-					else if( line.substring(0,2).equals("0 ") ){
+					else if( line.substring(0, 2).equals("0 ") ){
 						if( in.hasNextLine() )
 							start = 2;
 						else
@@ -213,14 +213,16 @@ public class CompressionManager {
 						else if( Character.isDigit(line.charAt(i)) ) {
 							// Adds support for multiple digit numbers
 							String temp = line.charAt(i) + "";
-							for( i = i + 1; i < line.length(); i++ ) {
-								if( Character.isDigit(line.charAt(i)) )
-									temp += line.charAt(i);
+							int j = i + 1;
+							for( ; j < line.length(); j++ ) {
+								if( Character.isDigit(line.charAt(j)) )
+									temp += line.charAt(j);
 								else {
-									i--;
+									j--;
 									break;
 								}
 							}
+							i = j;
 							index = Integer.parseInt(temp);
 							
 							// Checks if index is in wordlist and write corresponding word

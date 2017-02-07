@@ -23,7 +23,7 @@ public class DoubleListTest {
 	@Test
 	public void testDoubleList() {
 		DoubleList<String> wordlist = new DoubleList<>();
-		assertFalse( wordlist.equals(null) );
+		assertFalse( wordlist == null );
 	}
 
 	/**
